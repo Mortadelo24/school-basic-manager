@@ -12,10 +12,15 @@ export default class TemplateGroup extends Template {
         alias: ""
     };
 
+    public get currentAlias(){
+        return this.current.alias;
+    }
+
 
     constructor(private templates: TemplateAndAlias[]) {
         super();
         this.changeByAlias(this.templates[0].alias);
+        
     }
 
     public changeByAlias(alias: string) {
@@ -34,10 +39,27 @@ export default class TemplateGroup extends Template {
     }
 
     private chargeCurrentTemplate() {
-        this.current?.template.renderHTML(this.HTML);
+        this.current?.template.renderHTML(this.HTML, false);
     }
 
 
+    // private saveGroupState(){
+    //     localStorage.setItem(this.groupId, JSON.stringify({
+    //         currentTemplate: this.currentAlias
+    //     }));
+
+    // }
+    // private chargeSavedGroupState(){
+    //     const data: string | null = localStorage.getItem(this.groupId)
+    //     if (!data)return;
+
+    //     const savedData =  JSON.parse(data );
+       
+    //     if ( savedData.currentTemplate){
+
+    //     }
+
+    // }
 
 
 }

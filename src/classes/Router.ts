@@ -15,6 +15,6 @@ export default class Router {
         this.templateGroups.push(templateGroup)
 
     }
-    
+                                
 
 }
