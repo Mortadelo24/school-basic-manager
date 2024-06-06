@@ -1,7 +1,8 @@
 import getChildElement from '../../../tools/documentTools';
 import html from './login.html?raw';
-import { getUserToken } from '../useCases/useAuth';
+import {loginUser } from '../dataBase/useAuth';
 import { renderRegister } from './register';
+import checkEmail from '../useCases/checkEmail';
 
 
 const template = document.createElement("div");
@@ -9,6 +10,7 @@ template.classList.add("view");
 template.innerHTML = html;
 
 export const renderLogin = (element: HTMLElement) => {
+    
     element.innerHTML = "";
     element.append(template)
 }
@@ -19,13 +21,40 @@ const passwordInput: HTMLInputElement = getChildElement(template,"#loginPassword
 
 const form: HTMLFormElement = getChildElement(template,"#loginForm") as HTMLFormElement;
 
+const setErrorMessage = ( message: string)=>{
+    const errorContainer =  getChildElement(template, "#loginErrorMessage");
+
+   errorContainer.innerText = message;
+   errorContainer.removeAttribute("hidden")
+}
 
 form.addEventListener("submit", (event)=>{
     event.preventDefault();
     const email = emailInput.value;
     const password = passwordInput.value;
 
-    console.log(getUserToken(email, password));
+    if(!checkEmail(email)){
+        setErrorMessage("The email is not an email valid");
+        return
+    }
+    if(password.length < 1){
+        setErrorMessage("You need to put a password.");
+
+        return
+    }
+
+    loginUser(email, password, 
+    ()=>{
+        emailInput.value = "";
+       
+
+    }, 
+    ()=>{
+        setErrorMessage("The password or the email are incorrect.");
+    })
+    passwordInput.value = "";
+
+    
 
 })
 
@@ -37,6 +66,8 @@ const loginChangingButton: HTMLAnchorElement = getChildElement(template,"#loginC
 
 loginChangingButton.addEventListener("click", (event)=>{
     event.preventDefault();
+    passwordInput.value = "";
+    emailInput.value = "";
     const parent = template.parentElement;
     if (!parent) throw Error("This can not happen")
 

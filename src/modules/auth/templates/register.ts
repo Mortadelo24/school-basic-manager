@@ -2,7 +2,7 @@ import html from './register.html?raw';
 import getChildElement from "../../../tools/documentTools"
 import checkPassword from '../useCases/checkPassword';
 import checkEmail from '../useCases/checkEmail';
-import { registerNewUser } from '../useCases/useAuth';
+import { registerNewUser } from '../dataBase/useAuth';
 import { renderLogin } from './login';
 
 const template = document.createElement("div");
@@ -21,6 +21,15 @@ const passwordInput: HTMLInputElement = getChildElement(template,"#registerPassw
 const repeatPasswordInput: HTMLInputElement = getChildElement(template,"#registerRepeatPasswordInput") as HTMLInputElement;
 const form: HTMLFormElement = getChildElement(template,"#registerForm") as HTMLFormElement;
 
+
+const setErrorMessage = ( message: string)=>{
+    const errorContainer =  getChildElement(template, "#registerErrorMessage");
+
+   errorContainer.innerText = message;
+   errorContainer.removeAttribute("hidden")
+}
+
+
 form.addEventListener("submit", (event)=>{
     event.preventDefault();
     const email = emailInput.value;
@@ -31,15 +40,15 @@ form.addEventListener("submit", (event)=>{
     // TODO:  show the errors in the html
 
     if (!isAValidPassword){
-        console.log(misTakes)
+        setErrorMessage(misTakes[0].message.replace("string", "password"));
         return 
     }
     if(!checkEmail(email)){
-        console.log(`invalid email ${email}`)
+        setErrorMessage("The email is not valid")
         return
     }
     if(password !== repeatPassword){
-        console.log("Your passwords are not the same")
+        setErrorMessage("Your passwords are not the same");
         return
     }
 
@@ -50,6 +59,9 @@ form.addEventListener("submit", (event)=>{
 const registerChanginButton: HTMLAnchorElement = getChildElement(template,"#registerChanginButton") as HTMLAnchorElement;
 registerChanginButton.addEventListener("click", (event)=>{
     event.preventDefault();
+    emailInput.value = "";
+    passwordInput.value = "";
+    repeatPasswordInput.value = "";
     const parent = template.parentElement;
     if (!parent) throw Error("This can not happen")
 

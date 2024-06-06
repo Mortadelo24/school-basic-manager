@@ -1,4 +1,4 @@
-import { renderLogin } from './modules/auth/templates/login';
+import { renderTestModule } from './modules/test/module';
 import './style.css'
 
 
@@ -7,4 +7,10 @@ const appHTML:HTMLDivElement | null = document.querySelector("#app");
 
 if (! appHTML) throw new Error("There is not div#app");
 
-renderLogin(appHTML);
+// renderAuthModule(appHTML);
+renderTestModule(appHTML);
+
+
+export {
+    appHTML
+}
