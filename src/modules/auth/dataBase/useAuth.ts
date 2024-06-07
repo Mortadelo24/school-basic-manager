@@ -1,9 +1,11 @@
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, User } from "firebase/auth";
+import { browserLocalPersistence, createUserWithEmailAndPassword, setPersistence, signInWithEmailAndPassword, User } from "firebase/auth";
 import { myAuth } from "./firebaseConfig"
 
 
-let user: User | null = null;
+let user: User | null = myAuth.currentUser;
 let onLogin: ()=>void = ()=>{};
+
+setPersistence(myAuth, browserLocalPersistence);
 
 const loginUser = (
     email: string, 
